@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { suitePrisma } from "@/lib/suitePrisma";
-import { moduleSlugToModule, MODULE_LABELS } from "@operacao-hoteleira/suite-core";
+import { moduleSlugToModule, MODULE_LABELS } from "@/lib/addressing";
 
 export default async function ClienteModulo({
   params,

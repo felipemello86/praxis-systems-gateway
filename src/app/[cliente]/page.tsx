@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { suitePrisma } from "@/lib/suitePrisma";
-import { moduleToSlug, MODULE_LABELS } from "@operacao-hoteleira/suite-core";
+import { moduleToSlug, MODULE_LABELS } from "@/lib/addressing";
 
 export default async function ClienteHub({
   params,
