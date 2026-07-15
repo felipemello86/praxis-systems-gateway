@@ -27,7 +27,7 @@ export default async function ClienteHub({
       }}
     >
       <div style={{ textAlign: "center" }}>
-        <p style={{ color: "#6e6e73", margin: 0, fontSize: 14 }}>Praxis Systems</p>
+        <p style={{ color: "#6e6e73", margin: 0, fontSize: 14 }}>Praxis</p>
         <h1 style={{ fontSize: 28, fontWeight: 700, margin: "4px 0 0" }}>
           {tenant.name}
         </h1>

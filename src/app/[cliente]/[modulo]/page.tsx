@@ -37,7 +37,7 @@ export default async function ClienteModulo({
           {tenant.name} não tem {MODULE_LABELS[module]} habilitado
         </h1>
         <p style={{ color: "#6e6e73" }}>
-          Fale com o time comercial da Praxis Systems pra ativar este módulo.
+          Fale com o time comercial da Praxis pra ativar este módulo.
         </p>
       </main>
     );

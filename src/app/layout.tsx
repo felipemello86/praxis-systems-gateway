@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Praxis Systems",
+  title: "Praxis",
   description: "Excelência operacional hoteleira.",
 };
 
