@@ -2,9 +2,17 @@
 // `file:` dependency — o gateway é um repositório git separado, deployado
 // isoladamente na Vercel, e não tem acesso ao caminho relativo
 // "../../packages/suite-core" que só existe dentro do monorepo completo
-// "Operacao Hoteleira Integrada"). O gateway só lê Tenant/TenantModule, então
-// só esses dois modelos (+ o enum SuiteModule) estão aqui — se o schema
-// suite_core mudar, replicar aqui também.
+// "Operacao Hoteleira Integrada").
+//
+// IMPORTANTE: mesmo os modelos que este app não usa diretamente (User,
+// UserModuleAccess, IntegrationEvent) PRECISAM estar aqui — `prisma db push`
+// sincroniza o banco pra bater exatamente com o que está declarado neste
+// arquivo. Se um modelo existente no Postgres não está declarado aqui, o
+// push tenta APAGAR a tabela. Sempre copiar o schema suite_core INTEIRO,
+// nunca só um subconjunto (ver histórico: isso quase apagou TenantModule em
+// produção quando os outros 3 apps ganharam suas cópias). Se o schema
+// suite_core mudar, replicar aqui também (e em apps/housekeeping,
+// apps/maintenance, apps/booking-reviews).
 
 generator client {
   provider        = "prisma-client-js"
@@ -26,6 +34,8 @@ model Tenant {
   updatedAt DateTime @updatedAt
 
   modules TenantModule[]
+  events  IntegrationEvent[]
+  users   User[]
 
   @@schema("suite_core")
 }
@@ -52,5 +62,84 @@ model TenantModule {
   updatedAt DateTime @updatedAt
 
   @@unique([tenantId, module])
+  @@schema("suite_core")
+}
+
+model IntegrationEvent {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  sourceModule SuiteModule
+  targetModule SuiteModule
+  type         String
+  payload      Json
+
+  status      EventStatus @default(PENDING)
+  attempts    Int         @default(0)
+  lastError   String?
+  createdAt   DateTime    @default(now())
+  processedAt DateTime?
+
+  @@index([tenantId, targetModule, status])
+  @@schema("suite_core")
+}
+
+enum EventStatus {
+  PENDING
+  DELIVERED
+  FAILED
+  SKIPPED_MODULE_DISABLED
+
+  @@schema("suite_core")
+}
+
+// Ver comentário completo em packages/suite-core/prisma/schema.prisma.
+enum GlobalRole {
+  MASTER
+  GERENTE
+  GOVERNANTA
+  CAMAREIRA
+  LAVANDERIA
+  MANUTENCAO
+  ATENDIMENTO
+
+  @@schema("suite_core")
+}
+
+model User {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  nome           String
+  email          String
+  passwordHash   String?
+  role           GlobalRole
+  telegramChatId String?
+  whatsapp       String?
+  foto           String?
+  ativo          Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  moduleAccess UserModuleAccess[]
+
+  @@unique([tenantId, email])
+  @@schema("suite_core")
+}
+
+model UserModuleAccess {
+  id      String      @id @default(cuid())
+  userId  String
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module  SuiteModule
+  enabled Boolean     @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, module])
   @@schema("suite_core")
 }

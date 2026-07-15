@@ -14,9 +14,9 @@ export const MODULE_SLUGS: Record<SuiteModule, string> = {
 };
 
 export const MODULE_LABELS: Record<SuiteModule, string> = {
-  HOUSEKEEPING: "Governança (Housekeeping)",
-  BOOKING_REVIEWS: "Reviews",
-  MAINTENANCE: "Upkeep (Manutenção)",
+  HOUSEKEEPING: "Governança",
+  BOOKING_REVIEWS: "Avaliações",
+  MAINTENANCE: "Manutenção",
 };
 
 const SLUG_TO_MODULE: Record<string, SuiteModule> = Object.entries(

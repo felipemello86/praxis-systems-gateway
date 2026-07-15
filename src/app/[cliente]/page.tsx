@@ -1,6 +1,24 @@
 import { notFound } from "next/navigation";
 import { suitePrisma } from "@/lib/suitePrisma";
-import { moduleToSlug, MODULE_LABELS } from "@/lib/addressing";
+import { moduleToSlug, MODULE_LABELS, SuiteModule } from "@/lib/addressing";
+import { getSuiteSession } from "@/lib/suiteSession";
+import { logoutAction } from "./actions";
+
+const MODULE_ICON: Record<SuiteModule, string> = {
+  HOUSEKEEPING: "🛏️",
+  MAINTENANCE: "🔧",
+  BOOKING_REVIEWS: "⭐",
+};
+
+const ROLE_LABEL: Record<string, string> = {
+  MASTER: "Master",
+  GERENTE: "Gerente",
+  GOVERNANTA: "Governanta",
+  CAMAREIRA: "Camareira",
+  LAVANDERIA: "Lavanderia",
+  MANUTENCAO: "Manutenção",
+  ATENDIMENTO: "Atendimento",
+};
 
 export default async function ClienteHub({
   params,
@@ -14,37 +32,39 @@ export default async function ClienteHub({
 
   if (!tenant) notFound();
 
+  const session = await getSuiteSession();
+  const boundLogout = logoutAction.bind(null, tenant.slug);
+
   return (
     <main
       style={{
         minHeight: "100svh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 24,
-        padding: 24,
+        padding: "20px 20px 16px",
       }}
     >
-      <div style={{ textAlign: "center" }}>
-        <p style={{ color: "#6e6e73", margin: 0, fontSize: 14 }}>Praxis</p>
-        <h1 style={{ fontSize: 28, fontWeight: 700, margin: "4px 0 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 20 }}>
+        <p style={{ color: "#6e6e73", margin: 0, fontSize: 13 }}>Praxis</p>
+        <h1 style={{ fontSize: 24, fontWeight: 700, margin: "2px 0 0" }}>
           {tenant.name}
         </h1>
       </div>
 
       {tenant.modules.length === 0 ? (
-        <p style={{ color: "#6e6e73" }}>
+        <p style={{ color: "#6e6e73", textAlign: "center" }}>
           Nenhum módulo habilitado para este cliente ainda.
         </p>
       ) : (
         <div
           style={{
+            flex: 1,
             display: "flex",
             flexDirection: "column",
-            gap: 10,
+            gap: 12,
             width: "100%",
-            maxWidth: 340,
+            maxWidth: 420,
+            margin: "0 auto",
           }}
         >
           {tenant.modules.map((m) => {
@@ -59,21 +79,81 @@ export default async function ClienteHub({
                 key={m.id}
                 href={`/${tenant.slug}/${slug}`}
                 style={{
-                  display: "block",
-                  padding: "14px 18px",
-                  borderRadius: 14,
+                  flex: 1,
+                  minHeight: 88,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  padding: "0 22px",
+                  borderRadius: 20,
                   background: "#fff",
                   color: "#1d1d1f",
                   textDecoration: "none",
-                  fontWeight: 600,
                   boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
                 }}
               >
-                {MODULE_LABELS[m.module]}
+                <span style={{ fontSize: 30 }}>{MODULE_ICON[m.module]}</span>
+                <span style={{ fontSize: 20, fontWeight: 700 }}>
+                  {MODULE_LABELS[m.module]}
+                </span>
               </a>
             );
           })}
+
+          <a
+            href={`/${tenant.slug}/configuracoes`}
+            style={{
+              flex: 1,
+              minHeight: 88,
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              padding: "0 22px",
+              borderRadius: 20,
+              background: "#e8e8ed",
+              color: "#1d1d1f",
+              textDecoration: "none",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+            }}
+          >
+            <span style={{ fontSize: 30 }}>⚙️</span>
+            <span style={{ fontSize: 20, fontWeight: 700 }}>Configurações</span>
+          </a>
         </div>
+      )}
+
+      {session && (
+        <form
+          action={boundLogout}
+          style={{
+            marginTop: 20,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            fontSize: 13,
+            color: "#86868b",
+          }}
+        >
+          <span>
+            {session.nome} · {ROLE_LABEL[session.role] ?? session.role}
+          </span>
+          <span>·</span>
+          <button
+            type="submit"
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              color: "#86868b",
+              fontSize: 13,
+              textDecoration: "underline",
+              cursor: "pointer",
+            }}
+          >
+            Sair
+          </button>
+        </form>
       )}
     </main>
   );
