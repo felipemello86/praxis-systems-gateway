@@ -73,68 +73,73 @@ export default async function ClienteHub({
           style={{
             flex: 1,
             minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "1fr 1fr",
-            gap: 14,
-            width: "100%",
-            maxWidth: 420,
-            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {tenant.modules.map((m) => {
-            const slug = moduleToSlug(m.module);
-            const Icon = MODULE_ICON[m.module];
-            return (
-              // <a> pura de propósito, não <Link> do Next.js: /{modulo} é
-              // servido por um app Next.js DIFERENTE (build/bundle próprio)
-              // por trás do rewrite. Navegação client-side (soft) tenta
-              // reconciliar a resposta com o manifesto de chunks DESTE app
-              // e quebra (ChunkLoadError). Precisa ser um reload completo.
-              <a
-                key={m.id}
-                href={`/${tenant.slug}/${slug}`}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                  borderRadius: 20,
-                  background: "#fff",
-                  color: "#1d1d1f",
-                  textDecoration: "none",
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
-                  minHeight: 0,
-                }}
-              >
-                <Icon size={26} />
-                <span style={{ fontSize: 16, fontWeight: 700, textAlign: "center" }}>
-                  {MODULE_LABELS[m.module]}
-                </span>
-              </a>
-            );
-          })}
-
-          <a
-            href={`/${tenant.slug}/configuracoes`}
+          <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              borderRadius: 20,
-              background: "#e8e8ed",
-              color: "#1d1d1f",
-              textDecoration: "none",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
-              minHeight: 0,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gridAutoRows: 96,
+              gap: 12,
+              width: "100%",
+              maxWidth: 260,
             }}
           >
-            <IconGear size={26} />
-            <span style={{ fontSize: 16, fontWeight: 700, textAlign: "center" }}>Configurações</span>
-          </a>
+            {tenant.modules.map((m) => {
+              const slug = moduleToSlug(m.module);
+              const Icon = MODULE_ICON[m.module];
+              return (
+                // <a> pura de propósito, não <Link> do Next.js: /{modulo} é
+                // servido por um app Next.js DIFERENTE (build/bundle próprio)
+                // por trás do rewrite. Navegação client-side (soft) tenta
+                // reconciliar a resposta com o manifesto de chunks DESTE app
+                // e quebra (ChunkLoadError). Precisa ser um reload completo.
+                <a
+                  key={m.id}
+                  href={`/${tenant.slug}/${slug}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    borderRadius: 16,
+                    background: "#fff",
+                    color: "#1d1d1f",
+                    textDecoration: "none",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+                  }}
+                >
+                  <Icon size={20} />
+                  <span style={{ fontSize: 12.5, fontWeight: 700, textAlign: "center" }}>
+                    {MODULE_LABELS[m.module]}
+                  </span>
+                </a>
+              );
+            })}
+
+            <a
+              href={`/${tenant.slug}/configuracoes`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                borderRadius: 16,
+                background: "#e8e8ed",
+                color: "#1d1d1f",
+                textDecoration: "none",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+              }}
+            >
+              <IconGear size={20} />
+              <span style={{ fontSize: 12.5, fontWeight: 700, textAlign: "center" }}>Configurações</span>
+            </a>
+          </div>
         </div>
       )}
 
