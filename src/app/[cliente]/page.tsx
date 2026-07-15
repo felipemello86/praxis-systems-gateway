@@ -62,10 +62,11 @@ export default async function ClienteHub({
             flex: 1,
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "1fr 1fr",
+            gridAutoRows: "min-content",
+            alignContent: "center",
             gap: 14,
             width: "100%",
-            maxWidth: 460,
+            maxWidth: 420,
             margin: "0 auto",
           }}
         >
@@ -82,11 +83,12 @@ export default async function ClienteHub({
                 key={m.id}
                 href={`/${tenant.slug}/${slug}`}
                 style={{
+                  aspectRatio: "1 / 0.85",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 12,
+                  gap: 10,
                   borderRadius: 20,
                   background: "#fff",
                   color: "#1d1d1f",
@@ -94,8 +96,8 @@ export default async function ClienteHub({
                   boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
                 }}
               >
-                <Icon size={30} />
-                <span style={{ fontSize: 17, fontWeight: 700, textAlign: "center" }}>
+                <Icon size={26} />
+                <span style={{ fontSize: 16, fontWeight: 700, textAlign: "center" }}>
                   {MODULE_LABELS[m.module]}
                 </span>
               </a>
@@ -105,11 +107,12 @@ export default async function ClienteHub({
           <a
             href={`/${tenant.slug}/configuracoes`}
             style={{
+              aspectRatio: "1 / 0.85",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: 12,
+              gap: 10,
               borderRadius: 20,
               background: "#e8e8ed",
               color: "#1d1d1f",
@@ -117,8 +120,8 @@ export default async function ClienteHub({
               boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
             }}
           >
-            <IconGear size={30} />
-            <span style={{ fontSize: 17, fontWeight: 700, textAlign: "center" }}>Configurações</span>
+            <IconGear size={26} />
+            <span style={{ fontSize: 16, fontWeight: 700, textAlign: "center" }}>Configurações</span>
           </a>
         </div>
       )}
