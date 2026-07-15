@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { suitePrisma } from "@/lib/suitePrisma";
 import { moduleToSlug, MODULE_LABELS, SuiteModule } from "@/lib/addressing";
-import { getSuiteSession } from "@/lib/suiteSession";
+import { getSuiteSession, verifySuiteSession, SUITE_SESSION_COOKIE } from "@/lib/suiteSession";
 import { logoutAction } from "./actions";
 import { IconBed, IconWrench, IconStar, IconGear } from "@/lib/icons";
 
@@ -23,8 +24,10 @@ const ROLE_LABEL: Record<string, string> = {
 
 export default async function ClienteHub({
   params,
+  searchParams,
 }: {
   params: { cliente: string };
+  searchParams: { debug?: string };
 }) {
   const tenant = await suitePrisma.tenant.findUnique({
     where: { slug: params.cliente },
@@ -35,6 +38,22 @@ export default async function ClienteHub({
 
   const session = await getSuiteSession();
   const boundLogout = logoutAction.bind(null, tenant.slug);
+
+  // Diagnóstico temporário — acessível só com ?debug=1 na URL, pra
+  // investigar por que o rodapé de usuário/sair não estava aparecendo pra
+  // gente logado. Remover depois de resolver.
+  let debugInfo: string | null = null;
+  if (searchParams?.debug === "1") {
+    const raw = (await cookies()).get(SUITE_SESSION_COOKIE)?.value;
+    if (!raw) {
+      debugInfo = "Cookie praxis_session: AUSENTE (não foi setado ou o navegador não guardou)";
+    } else {
+      const verified = await verifySuiteSession(raw);
+      debugInfo = verified
+        ? `Cookie presente e válido. userId=${verified.userId} nome=${verified.nome} role=${verified.role}`
+        : `Cookie presente (${raw.length} chars) mas FALHOU na verificação (secret errado ou token corrompido/expirado). Início: ${raw.slice(0, 20)}...`;
+    }
+  }
 
   return (
     <main
@@ -124,6 +143,22 @@ export default async function ClienteHub({
             <span style={{ fontSize: 16, fontWeight: 700, textAlign: "center" }}>Configurações</span>
           </a>
         </div>
+      )}
+
+      {debugInfo && (
+        <p
+          style={{
+            marginTop: 16,
+            padding: 12,
+            background: "#fff3cd",
+            borderRadius: 10,
+            fontSize: 12,
+            color: "#1d1d1f",
+            wordBreak: "break-all",
+          }}
+        >
+          DEBUG: {debugInfo}
+        </p>
       )}
 
       {session && (
