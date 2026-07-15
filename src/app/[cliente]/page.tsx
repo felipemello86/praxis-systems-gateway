@@ -58,15 +58,22 @@ export default async function ClienteHub({
   return (
     <main
       style={{
-        minHeight: "100svh",
+        height: "100svh",
+        overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        padding: "20px 20px 16px",
+        padding: "16px 20px 14px",
+        boxSizing: "border-box",
       }}
     >
-      <div style={{ textAlign: "center", marginBottom: 20 }}>
-        <p style={{ color: "#6e6e73", margin: 0, fontSize: 13 }}>Praxis</p>
-        <h1 style={{ fontSize: 24, fontWeight: 700, margin: "2px 0 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 14, flexShrink: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/praxis-logo.png"
+          alt="Praxis"
+          style={{ height: 30, width: "auto", display: "inline-block" }}
+        />
+        <h1 style={{ fontSize: 20, fontWeight: 700, margin: "6px 0 0", color: "#1d1d1f" }}>
           {tenant.name}
         </h1>
       </div>
@@ -79,10 +86,10 @@ export default async function ClienteHub({
         <div
           style={{
             flex: 1,
+            minHeight: 0,
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gridAutoRows: "min-content",
-            alignContent: "center",
+            gridTemplateRows: "1fr 1fr",
             gap: 14,
             width: "100%",
             maxWidth: 420,
@@ -102,7 +109,6 @@ export default async function ClienteHub({
                 key={m.id}
                 href={`/${tenant.slug}/${slug}`}
                 style={{
-                  aspectRatio: "1 / 0.85",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -113,6 +119,7 @@ export default async function ClienteHub({
                   color: "#1d1d1f",
                   textDecoration: "none",
                   boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+                  minHeight: 0,
                 }}
               >
                 <Icon size={26} />
@@ -126,7 +133,6 @@ export default async function ClienteHub({
           <a
             href={`/${tenant.slug}/configuracoes`}
             style={{
-              aspectRatio: "1 / 0.85",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -137,6 +143,7 @@ export default async function ClienteHub({
               color: "#1d1d1f",
               textDecoration: "none",
               boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+              minHeight: 0,
             }}
           >
             <IconGear size={26} />
@@ -148,13 +155,16 @@ export default async function ClienteHub({
       {debugInfo && (
         <p
           style={{
-            marginTop: 16,
-            padding: 12,
+            flexShrink: 0,
+            marginTop: 10,
+            padding: 10,
             background: "#fff3cd",
             borderRadius: 10,
-            fontSize: 12,
+            fontSize: 11,
             color: "#1d1d1f",
             wordBreak: "break-all",
+            maxHeight: 70,
+            overflow: "auto",
           }}
         >
           DEBUG: {debugInfo}
@@ -165,7 +175,8 @@ export default async function ClienteHub({
         <form
           action={boundLogout}
           style={{
-            marginTop: 20,
+            flexShrink: 0,
+            marginTop: 10,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
