@@ -18,6 +18,13 @@ generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["multiSchema"]
   output          = "../generated"
+  // "native" cobre quem roda `prisma generate` localmente (Mac); como esse
+  // client tem `output` customizado (fora de node_modules), ele fica
+  // commitado no git — sem "rhel-openssl-3.0.x" aqui, o binário gerado no
+  // Mac vai pro repo e quebra em runtime na Vercel (Linux), mesmo o build
+  // rodando `prisma generate` de novo lá. (Achado ao debugar o mesmo erro em
+  // housekeeping/api/usuarios — PrismaClientInitializationError.)
+  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
