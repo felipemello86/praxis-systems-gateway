@@ -3,11 +3,12 @@ import { suitePrisma } from "@/lib/suitePrisma";
 import { moduleToSlug, MODULE_LABELS, SuiteModule } from "@/lib/addressing";
 import { getSuiteSession } from "@/lib/suiteSession";
 import { logoutAction } from "./actions";
+import { IconBed, IconWrench, IconStar, IconGear } from "@/lib/icons";
 
-const MODULE_ICON: Record<SuiteModule, string> = {
-  HOUSEKEEPING: "🛏️",
-  MAINTENANCE: "🔧",
-  BOOKING_REVIEWS: "⭐",
+const MODULE_ICON: Record<SuiteModule, (props: { size?: number }) => JSX.Element> = {
+  HOUSEKEEPING: IconBed,
+  MAINTENANCE: IconWrench,
+  BOOKING_REVIEWS: IconStar,
 };
 
 const ROLE_LABEL: Record<string, string> = {
@@ -59,16 +60,18 @@ export default async function ClienteHub({
         <div
           style={{
             flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gridTemplateRows: "1fr 1fr",
+            gap: 14,
             width: "100%",
-            maxWidth: 420,
+            maxWidth: 460,
             margin: "0 auto",
           }}
         >
           {tenant.modules.map((m) => {
             const slug = moduleToSlug(m.module);
+            const Icon = MODULE_ICON[m.module];
             return (
               // <a> pura de propósito, não <Link> do Next.js: /{modulo} é
               // servido por um app Next.js DIFERENTE (build/bundle próprio)
@@ -79,12 +82,11 @@ export default async function ClienteHub({
                 key={m.id}
                 href={`/${tenant.slug}/${slug}`}
                 style={{
-                  flex: 1,
-                  minHeight: 88,
                   display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
-                  gap: 16,
-                  padding: "0 22px",
+                  justifyContent: "center",
+                  gap: 12,
                   borderRadius: 20,
                   background: "#fff",
                   color: "#1d1d1f",
@@ -92,8 +94,8 @@ export default async function ClienteHub({
                   boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
                 }}
               >
-                <span style={{ fontSize: 30 }}>{MODULE_ICON[m.module]}</span>
-                <span style={{ fontSize: 20, fontWeight: 700 }}>
+                <Icon size={30} />
+                <span style={{ fontSize: 17, fontWeight: 700, textAlign: "center" }}>
                   {MODULE_LABELS[m.module]}
                 </span>
               </a>
@@ -103,12 +105,11 @@ export default async function ClienteHub({
           <a
             href={`/${tenant.slug}/configuracoes`}
             style={{
-              flex: 1,
-              minHeight: 88,
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
-              gap: 16,
-              padding: "0 22px",
+              justifyContent: "center",
+              gap: 12,
               borderRadius: 20,
               background: "#e8e8ed",
               color: "#1d1d1f",
@@ -116,8 +117,8 @@ export default async function ClienteHub({
               boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
             }}
           >
-            <span style={{ fontSize: 30 }}>⚙️</span>
-            <span style={{ fontSize: 20, fontWeight: 700 }}>Configurações</span>
+            <IconGear size={30} />
+            <span style={{ fontSize: 17, fontWeight: 700, textAlign: "center" }}>Configurações</span>
           </a>
         </div>
       )}
