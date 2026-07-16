@@ -8,14 +8,24 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 16px 20px 14px;
+  /* env(safe-area-inset-*) evita que o logo/rodapé fiquem atrás do notch
+     (Dynamic Island) ou da barra home do iPhone dentro do app Capacitor —
+     ver viewport-fit=cover em src/app/layout.tsx (precisa dos dois juntos,
+     senão env() sempre resolve pra 0). */
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-right: max(20px, env(safe-area-inset-right));
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+  padding-left: max(20px, env(safe-area-inset-left));
   box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
   .main {
     height: 100vh;
-    padding: 40px 32px;
+    padding-top: max(40px, env(safe-area-inset-top));
+    padding-right: max(32px, env(safe-area-inset-right));
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+    padding-left: max(32px, env(safe-area-inset-left));
   }
 }
 
