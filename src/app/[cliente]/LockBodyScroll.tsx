@@ -10,9 +10,14 @@ import { useEffect } from "react";
 // cima e esconde o cabeçalho (logo + nome do hotel) atrás do teclado, sem
 // nenhum ganho (nada "aparece" que já não estivesse visível).
 //
-// `position: fixed` no <body> tira o documento do elemento que o WKWebView
-// rola nativamente (ele rola o scroll container do documento, não o layout
-// interno) — truque padrão pra esse tipo de app "sem rolagem".
+// IMPORTANTE: já tentamos `position: fixed` no <html> e no <body> junto —
+// quebrou o toque no botão "Sair" do rodapé (a dupla posição fixa bagunça
+// o hit-test de toque do WKWebView perto da borda inferior). `overflow:
+// hidden` sozinho (sem position: fixed) já é suficiente aqui: como não tem
+// NADA rolável dentro de html/body (o próprio <main> já ocupa 100dvh com
+// overflow hidden), não existe scroll possível pro WKWebView "puxar" no
+// scroll-into-view — position: fixed era redundante e foi o que quebrou o
+// clique.
 //
 // Só afeta esta tela: toda navegação daqui pra frente (Configurações,
 // módulos) é reload completo (<a> pura, não <Link> — ver comentário em
@@ -20,24 +25,15 @@ import { useEffect } from "react";
 export function LockBodyScroll() {
   useEffect(() => {
     const { body, documentElement: html } = document;
-
-    // Trava os DOIS: só o body não bastou (ver gravação de tela — ainda
-    // aparecia um indicador de scroll do lado direito mesmo parado, sem
-    // teclado aberto). O elemento que efetivamente rola por padrão num
-    // documento HTML normal é o <html>, não o <body> — travar só o body
-    // deixa o <html> livre pra continuar sendo o scroller real.
     const target = [body, html];
+
     const prev = target.map((el) => ({
-      position: el.style.position,
-      width: el.style.width,
       height: el.style.height,
       overflow: el.style.overflow,
       overscrollBehavior: el.style.overscrollBehavior,
     }));
 
     for (const el of target) {
-      el.style.position = "fixed";
-      el.style.width = "100%";
       el.style.height = "100%";
       el.style.overflow = "hidden";
       el.style.overscrollBehavior = "none";
@@ -45,8 +41,6 @@ export function LockBodyScroll() {
 
     return () => {
       target.forEach((el, i) => {
-        el.style.position = prev[i].position;
-        el.style.width = prev[i].width;
         el.style.height = prev[i].height;
         el.style.overflow = prev[i].overflow;
         el.style.overscrollBehavior = prev[i].overscrollBehavior;
