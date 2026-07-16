@@ -28,6 +28,7 @@ const SUITE_SESSION_TTL = "30d";
 export interface SuiteSessionPayload {
   userId: string;
   tenantId: string;
+  tenantSlug: string;
   nome: string;
   email: string;
   role: string;

@@ -46,6 +46,7 @@ export async function loginAction(
   await setSuiteSessionCookie({
     userId: user.id,
     tenantId: tenant.id,
+    tenantSlug: tenant.slug,
     nome: user.nome,
     email: user.email,
     role: user.role,
