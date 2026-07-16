@@ -4,9 +4,9 @@ import { moduleToSlug, MODULE_LABELS, SuiteModule } from "@/lib/addressing";
 import { getSuiteSession } from "@/lib/suiteSession";
 import { logoutAction } from "./actions";
 import { LoginForm } from "./LoginForm";
+import { LockBodyScroll } from "./LockBodyScroll";
 import { IconBed, IconWrench, IconStar, IconGear } from "@/lib/icons";
 import styles from "./page.module.css";
-import "./hub-lock.css";
 
 const MODULE_ICON: Record<SuiteModule, (props: { size?: number }) => JSX.Element> = {
   HOUSEKEEPING: IconBed,
@@ -41,6 +41,7 @@ export default async function ClienteHub({
 
   return (
     <main className={styles.main}>
+      <LockBodyScroll />
       <div className={styles.header}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/praxis-logo.png" alt="Praxis" className={styles.logo} />
