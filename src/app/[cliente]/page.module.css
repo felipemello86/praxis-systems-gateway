@@ -4,7 +4,7 @@
    por que os botões usam <a> pura em vez de <Link>. */
 
 .main {
-  height: 100svh;
+  height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
