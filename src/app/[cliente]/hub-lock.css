@@ -1,0 +1,25 @@
+/* CSS global "de verdade" (não .module.css) — precisa ser assim porque
+   CSS Modules recusa uma regra feita 100% de :global(...) ("selectors must
+   contain at least one local class or id", quebrou o build anterior).
+   html/body só existem uma vez por documento mesmo, não faz sentido
+   escopar via classe local.
+
+   Trava o scroll do documento nesta tela (login + hub de módulos) direto
+   no CSS, sem depender de JS rodando depois da hidratação (ver histórico
+   em LockBodyScroll.tsx, desativado). `position: fixed` foi tentado antes
+   e quebrou o toque no botão "Sair" perto da borda inferior no WKWebView —
+   não usar de novo. `overflow: hidden` sozinho já basta, porque não sobra
+   nada rolável dentro do documento (o <main> já ocupa 100dvh/100vh com
+   overflow hidden).
+
+   Importado só em page.tsx (não no layout raiz): toda navegação daqui pra
+   frente é reload completo (<a> pura, não <Link>), então esse CSS só é
+   carregado quando esta tela específica é servida — não vaza pra
+   Configurações/Usuários, que precisam rolar normalmente. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}

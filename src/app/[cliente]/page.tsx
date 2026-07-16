@@ -6,6 +6,7 @@ import { logoutAction } from "./actions";
 import { LoginForm } from "./LoginForm";
 import { IconBed, IconWrench, IconStar, IconGear } from "@/lib/icons";
 import styles from "./page.module.css";
+import "./hub-lock.css";
 
 const MODULE_ICON: Record<SuiteModule, (props: { size?: number }) => JSX.Element> = {
   HOUSEKEEPING: IconBed,

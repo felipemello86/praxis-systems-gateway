@@ -3,25 +3,10 @@
    tiles maiores com hover, mais respiro. Ver comentário no page.tsx sobre
    por que os botões usam <a> pura em vez de <Link>. */
 
-/* Trava o scroll do documento (:global escapa do CSS Modules — html/body
-   só existem uma vez por página mesmo). Antes isso era feito via JS
-   (useEffect em LockBodyScroll.tsx aplicando inline style no mount) — trocado
-   por CSS puro porque JS só roda DEPOIS da hidratação: entre o HTML chegar
-   do servidor e o React hidratar, html/body ficavam sem nenhuma restrição
-   de scroll, e o WKWebView (app Capacitor) conseguia "travar" nesse estado
-   rolável mesmo depois do JS aplicar overflow:hidden. CSS aplica desde o
-   primeiro frame, sem essa janela.
-   `position: fixed` foi tentado antes e quebrou o toque no botão "Sair"
-   (bagunça o hit-test perto da borda inferior no WKWebView) — não usar de
-   novo. `overflow: hidden` sozinho já basta, porque não sobra nada rolável
-   dentro do documento (o <main> já ocupa 100dvh/100vh com overflow hidden). */
-:global(html),
-:global(body) {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  overscroll-behavior: none;
-}
+/* Trava de scroll de html/body: ver hub-lock.css neste mesmo diretório —
+   precisou virar CSS global "de verdade" porque CSS Modules recusa uma
+   regra feita 100% de :global(...) (quebrou o build: "selectors must
+   contain at least one local class or id"). */
 
 .main {
   height: 100dvh;
