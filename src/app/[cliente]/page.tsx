@@ -5,6 +5,7 @@ import { getSuiteSession } from "@/lib/suiteSession";
 import { logoutAction } from "./actions";
 import { LoginForm } from "./LoginForm";
 import { IconBed, IconWrench, IconStar, IconGear } from "@/lib/icons";
+import styles from "./page.module.css";
 
 const MODULE_ICON: Record<SuiteModule, (props: { size?: number }) => JSX.Element> = {
   HOUSEKEEPING: IconBed,
@@ -38,26 +39,11 @@ export default async function ClienteHub({
   const boundLogout = logoutAction.bind(null, tenant.slug);
 
   return (
-    <main
-      style={{
-        height: "100svh",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        padding: "16px 20px 14px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div style={{ textAlign: "center", marginBottom: 14, flexShrink: 0 }}>
+    <main className={styles.main}>
+      <div className={styles.header}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/praxis-logo.png"
-          alt="Praxis"
-          style={{ height: 30, width: "auto", display: "inline-block" }}
-        />
-        <h1 style={{ fontSize: 20, fontWeight: 700, margin: "6px 0 0", color: "#1d1d1f" }}>
-          {tenant.name}
-        </h1>
+        <img src="/praxis-logo.png" alt="Praxis" className={styles.logo} />
+        <h1 className={styles.title}>{tenant.name}</h1>
       </div>
 
       {!session ? (
@@ -69,25 +55,8 @@ export default async function ClienteHub({
           Nenhum módulo habilitado para este cliente ainda.
         </p>
       ) : (
-        <div
-          style={{
-            flex: 1,
-            minHeight: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gridAutoRows: 96,
-              gap: 12,
-              width: "100%",
-              maxWidth: 260,
-            }}
-          >
+        <div className={styles.buttonArea}>
+          <div className={styles.grid}>
             {tenant.modules.map((m) => {
               const slug = moduleToSlug(m.module);
               const Icon = MODULE_ICON[m.module];
@@ -97,82 +66,28 @@ export default async function ClienteHub({
                 // por trás do rewrite. Navegação client-side (soft) tenta
                 // reconciliar a resposta com o manifesto de chunks DESTE app
                 // e quebra (ChunkLoadError). Precisa ser um reload completo.
-                <a
-                  key={m.id}
-                  href={`/${tenant.slug}/${slug}`}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 6,
-                    borderRadius: 16,
-                    background: "#fff",
-                    color: "#1d1d1f",
-                    textDecoration: "none",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
-                  }}
-                >
-                  <Icon size={20} />
-                  <span style={{ fontSize: 12.5, fontWeight: 700, textAlign: "center" }}>
-                    {MODULE_LABELS[m.module]}
-                  </span>
+                <a key={m.id} href={`/${tenant.slug}/${slug}`} className={styles.tile}>
+                  <Icon />
+                  <span className={styles.tileLabel}>{MODULE_LABELS[m.module]}</span>
                 </a>
               );
             })}
 
-            <a
-              href={`/${tenant.slug}/configuracoes`}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 6,
-                borderRadius: 16,
-                background: "#e8e8ed",
-                color: "#1d1d1f",
-                textDecoration: "none",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
-              }}
-            >
-              <IconGear size={20} />
-              <span style={{ fontSize: 12.5, fontWeight: 700, textAlign: "center" }}>Configurações</span>
+            <a href={`/${tenant.slug}/configuracoes`} className={`${styles.tile} ${styles.tileConfig}`}>
+              <IconGear />
+              <span className={styles.tileLabel}>Configurações</span>
             </a>
           </div>
         </div>
       )}
 
       {session && (
-        <form
-          action={boundLogout}
-          style={{
-            flexShrink: 0,
-            marginTop: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 10,
-            fontSize: 13,
-            color: "#86868b",
-          }}
-        >
+        <form action={boundLogout} className={styles.footer}>
           <span>
             {session.nome} · {ROLE_LABEL[session.role] ?? session.role}
           </span>
           <span>·</span>
-          <button
-            type="submit"
-            style={{
-              background: "none",
-              border: "none",
-              padding: 0,
-              color: "#86868b",
-              fontSize: 13,
-              textDecoration: "underline",
-              cursor: "pointer",
-            }}
-          >
+          <button type="submit" className={styles.logoutBtn}>
             Sair
           </button>
         </form>
