@@ -77,6 +77,28 @@ export default async function ConfiguracoesHub({
           </p>
         </section>
 
+        <a
+          href={`/${tenant.slug}/configuracoes/usuarios`}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: "#fff",
+            borderRadius: 16,
+            padding: 20,
+            marginBottom: 20,
+            boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+            textDecoration: "none",
+            color: "#1d1d1f",
+          }}
+        >
+          <div>
+            <h2 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 4px" }}>Usuários</h2>
+            <p style={{ margin: 0, color: "#6e6e73", fontSize: 13 }}>Cadastro único, válido nos 3 módulos</p>
+          </div>
+          <span style={{ color: "#0071e3", fontSize: 20 }}>›</span>
+        </a>
+
         <section
           style={{
             background: "#fff",
